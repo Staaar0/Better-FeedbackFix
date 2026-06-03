@@ -22,16 +22,20 @@ target_compile_definitions(silencedtracerblocker_mm PRIVATE
     POSIX
     META_IS_SOURCE2=1
     COMPILER_GCC
+    GNUC
 )
 
 target_include_directories(silencedtracerblocker_mm PRIVATE
     ${MMSOURCE}/core
     ${MMSOURCE}/core/sourcehook
     ${MMSOURCE}/public
+
     ${HL2SDKCS2}/public
     ${HL2SDKCS2}/public/tier0
     ${HL2SDKCS2}/public/tier1
+    ${HL2SDKCS2}/public/mathlib
     ${HL2SDKCS2}/public/entity2
+    ${HL2SDKCS2}/public/game/server
     ${HL2SDKCS2}/common
     ${HL2SDKCS2}/game/shared
 )
