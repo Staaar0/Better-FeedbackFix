@@ -26,6 +26,8 @@ target_compile_definitions(silencedtracerblocker_mm PRIVATE
 )
 
 target_include_directories(silencedtracerblocker_mm PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/shims
+
     ${MMSOURCE}/core
     ${MMSOURCE}/core/sourcehook
     ${MMSOURCE}/public
