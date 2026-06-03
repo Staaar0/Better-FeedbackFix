@@ -18,15 +18,17 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake git python3
+          sudo apt-get install -y build-essential cmake git python3 zip
 
       - name: Download Metamod and HL2SDK-CS2
         run: |
           mkdir -p deps
           git clone --recursive https://github.com/alliedmodders/metamod-source deps/metamod-source
-          cd deps/metamod-source
-          ./support/checkout-deps.sh
-          cd ../..
+
+          cd deps
+          ./metamod-source/support/checkout-deps.sh -s cs2
+          cd ..
+
           find deps -maxdepth 2 -type d | sort
 
       - name: Configure
