@@ -1,0 +1,19 @@
+// SilencedTracerBlocker gamedata
+//
+// Purpose:
+//   Signature for the CS2 server-side particle dispatch function used by
+//   weapon tracer particles. The plugin blocks only particles whose name
+//   matches weapon tracer particles while a silenced weapon_fire event is active.
+//
+// Notes:
+//   - Linux signature below came from the files you uploaded.
+//   - Windows signature below was extracted from the server.dll you uploaded.
+//   - Update signatures after CS2 server updates if either pattern stops resolving.
+//
+// Format:
+//   DispatchParticleEffect_Linux = AA BB ?? CC
+//   DispatchParticleEffect_Windows = AA BB ?? CC
+//
+
+DispatchParticleEffect_Linux = 55 48 89 E5 41 57 41 56 41 55 41 54 41 89 CC 53 48 89 D3
+DispatchParticleEffect_Windows = 48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 20 4C 89 44 24 18 55 41 54 41 55 41 56 41 57 48 8D AC 24 80 FE FF FF 48 81 EC 80 02 00 00 33 FF
