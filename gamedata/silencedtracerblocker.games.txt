@@ -1,0 +1,19 @@
+"Games"
+{
+    "csgo"
+    {
+        "Signatures"
+        {
+            // From CS2Fixes-style gamedata.
+            // Function is the server-side particle dispatch used by weapon_tracers.
+            // Search string hint: "ParticleEffect".
+            // NOTE: keep this updated after CS2 updates.
+            "DispatchParticleEffect"
+            {
+                "library"   "server"
+                "windows"   "\x48\x89\x5C\x24\x08\x48\x89\x74\x24\x10\x48\x89\x7C\x24\x18\x4C\x89\x74\x24\x20\x55\x48\x8D\x6C\x24\xD1"
+                "linux"     "\x55\x48\x89\xE5\x41\x57\x41\x56\x41\x55\x41\x54\x41\x89\xCC\x53\x48\x89\xD3"
+            }
+        }
+    }
+}

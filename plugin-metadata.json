@@ -1,0 +1,7 @@
+{
+  "name": "SilencedTracerBlocker-CS2FixesPatch",
+  "version": "0.1.0",
+  "description": "CS2Fixes-style patch to block weapon_tracers particle dispatch only for silenced weapons while keeping BetterFeedback unchanged.",
+  "target": "Counter-Strike 2 dedicated server",
+  "base": "Source2ZE/CS2Fixes"
+}
