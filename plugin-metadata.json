@@ -1,0 +1,11 @@
+{
+  "name": "SilencedTracerBlocker",
+  "alias": "stb",
+  "display_name": "SilencedTracerBlocker",
+  "description": "Blocks CS2 GE_FireBullets tracer source for silenced weapons only.",
+  "author": "MeShal Alharbi / ChatGPT",
+  "url": "https://github.com/oifancy1/SilencedTracerBlocker",
+  "log_tag": "STB",
+  "license": "MIT",
+  "version": "1.4.0"
+}
