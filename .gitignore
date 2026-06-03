@@ -1,0 +1,13 @@
+build/
+deps/
+*.user
+*.suo
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll
+*.so
+*.dylib
+.DS_Store
