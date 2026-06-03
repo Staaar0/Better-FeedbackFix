@@ -1,0 +1,36 @@
+name: Build CS2Fixes Plugin
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build with Docker
+        run: |
+          docker build -t cs2fixes-builder .
+          docker run --name cs2fixes-build cs2fixes-builder
+
+      - name: Copy build package
+        run: |
+          mkdir -p output
+          docker cp cs2fixes-build:/app/source/dockerbuild/package ./output/package || true
+          docker cp cs2fixes-build:/app/source/build/package ./output/package || true
+          find output -type f
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SilencedTracerBlocker-package
+          path: output/
