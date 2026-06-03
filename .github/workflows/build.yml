@@ -1,0 +1,61 @@
+name: Build SilencedTracerBlocker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout plugin source
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git python3
+
+      - name: Download Metamod and HL2SDK-CS2
+        run: |
+          mkdir -p deps
+          git clone --recursive https://github.com/alliedmodders/metamod-source deps/metamod-source
+          cd deps/metamod-source
+          ./support/checkout-deps.sh
+          cd ../..
+          find deps -maxdepth 2 -type d | sort
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DMMSOURCE="$GITHUB_WORKSPACE/deps/metamod-source" \
+            -DHL2SDKCS2="$GITHUB_WORKSPACE/deps/hl2sdk-cs2" \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: |
+          cmake --build build --config Release -j2
+
+      - name: Package
+        run: |
+          mkdir -p package/addons/silencedtracerblocker/bin/linuxsteamrt64
+          mkdir -p package/addons/silencedtracerblocker/gamedata
+          mkdir -p package/addons/metamod
+
+          cp build/silencedtracerblocker_mm.so package/addons/silencedtracerblocker/bin/linuxsteamrt64/
+          cp gamedata/silenced_tracer_blocker.games.txt package/addons/silencedtracerblocker/gamedata/
+          cp addons/metamod/silencedtracerblocker.vdf package/addons/metamod/
+
+          cd package
+          zip -r ../SilencedTracerBlocker-package.zip .
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SilencedTracerBlocker-package
+          path: SilencedTracerBlocker-package.zip
