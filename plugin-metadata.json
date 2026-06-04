@@ -1,0 +1,11 @@
+{
+  "name": "SilencedTracerBlocker",
+  "alias": "stb",
+  "display_name": "SilencedTracerBlocker",
+  "description": "Blocks CS2 silenced weapon FireBullets tracers while preserving sound and impacts.",
+  "author": "✪ Stαr",
+  "url": "https://github.com/Staaar0/SilencedTracerBlocker",
+  "log_tag": "STB",
+  "license": "MIT",
+  "version": "1.0.1"
+}
