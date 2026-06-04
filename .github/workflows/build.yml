@@ -37,7 +37,7 @@ jobs:
         run: |
           mkdir -p build
           cd build
-          python3 ../configure.py --enable-optimize --targets=x86_64 --hl2sdk-root=../deps --mms-path=../deps/metamod-source
+          python3 ../configure.py --enable-optimize --targets=x86_64 --hl2sdk-root=../deps --mms_path=../deps/metamod-source
           ambuild
 
       - name: Create Linux package
@@ -82,7 +82,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path build
           Set-Location build
-          python ../configure.py --enable-optimize --targets=x86_64 --hl2sdk-root=../deps --mms-path=../deps/metamod-source
+          python ../configure.py --enable-optimize --targets=x86_64 --hl2sdk-root=../deps --mms_path=../deps/metamod-source
           ambuild
 
       - name: Create Windows package
