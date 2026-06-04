@@ -48,10 +48,6 @@ constexpr size_t kWeaponIdLiveOffset = 0x98;
 constexpr size_t kPlayerLiveOffset = 0x9C;
 constexpr uint32_t kDefaultEntityHandle = 0x00FFFFFFu;
 
-// CMsgTEFireBullets has one generated-protobuf has-bits word before the scalar
-// fields. Zeroing scalar values alone can still serialize the fields as
-// present, which still allows the client tracer path to run. These bits match
-// the field order shown by the CMsgTEFireBullets debug string.
 constexpr uint32_t kHasBitOrigin = 1u << 0;
 constexpr uint32_t kHasBitWeaponId = 1u << 2;
 constexpr uint32_t kHasBitSoundType = 1u << 9;
@@ -138,10 +134,6 @@ void HideTracerWeaponIdentity(unsigned char *data, size_t size)
     if (!data || size < kPlayerLiveOffset + sizeof(uint32_t))
         return;
 
-    // In the live CS2 CMsgTEFireBullets object, the last two uint32 fields are
-    // weapon_id and player. SS-21 cleared both and removed tracers, but clearing
-    // player also removed wall/surface impacts. Keep player intact for impacts
-    // and neutralize only weapon_id, which is the tracer weapon identity.
     WriteUInt32(data, size, kWeaponIdLiveOffset, kDefaultEntityHandle);
 }
 
@@ -202,8 +194,6 @@ void Hook_PostEventAbstract(void *self, int slot, bool localOnly, void *filter,
         auto *bytes = reinterpret_cast<unsigned char *>(const_cast<CNetMessage *>(messageData));
         const size_t size = static_cast<size_t>(messageSize);
 
-        // Keep sound, player, and impact data intact. Only neutralize the live
-        // weapon identity used by BetterFeedback/CS2 to choose a tracer.
         HideTracerWeaponIdentity(bytes, size);
 
         g_OriginalPostEventAbstract(self, slot, localOnly, filter, networkMessage, messageData, messageSize);
@@ -342,8 +332,7 @@ bool SilencedTracerBlocker::Unload(char *error, size_t maxlen)
 
 const char *SilencedTracerBlocker::GetAuthor()
 {
-    // UTF-8 bytes for: ✪ Stαr
-    return "\xE2\x9C\xAA St\xCE\xB1r";
+    return "✪ Stαr";
 }
 
 const char *SilencedTracerBlocker::GetName()
