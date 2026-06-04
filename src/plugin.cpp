@@ -28,7 +28,6 @@ namespace
 constexpr int kFireBulletsId = 452;
 constexpr size_t kPostEventIndex = 15;
 
-// Current CMsgTEFireBullets generated-protobuf object layout used by CS2.
 constexpr size_t kWeaponIdOffset = 0x60;
 constexpr size_t kModeOffset = 0x64;
 constexpr size_t kSeedOffset = 0x68;
