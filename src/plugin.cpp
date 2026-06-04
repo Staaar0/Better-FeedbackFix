@@ -20,8 +20,8 @@
     #include <unistd.h>
 #endif
 
-SilencedTracerBlocker g_SilencedTracerBlocker;
-PLUGIN_EXPOSE(SilencedTracerBlocker, g_SilencedTracerBlocker);
+BetterFeedBackFix g_BetterFeedBackFix;
+PLUGIN_EXPOSE(BetterFeedBackFix, g_BetterFeedBackFix);
 
 namespace
 {
@@ -291,7 +291,7 @@ void UnhookVtableSlot()
 }
 } // namespace
 
-bool SilencedTracerBlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
+bool BetterFeedBackFix::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
     PLUGIN_SAVEVARS();
 
@@ -320,7 +320,7 @@ bool SilencedTracerBlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t
     return true;
 }
 
-bool SilencedTracerBlocker::Unload(char *error, size_t maxlen)
+bool BetterFeedBackFix::Unload(char *error, size_t maxlen)
 {
     UnhookVtableSlot();
     g_GameEventSystem = nullptr;
@@ -329,42 +329,42 @@ bool SilencedTracerBlocker::Unload(char *error, size_t maxlen)
     return true;
 }
 
-const char *SilencedTracerBlocker::GetAuthor()
+const char *BetterFeedBackFix::GetAuthor()
 {
     return "✪ Stαr";
 }
 
-const char *SilencedTracerBlocker::GetName()
+const char *BetterFeedBackFix::GetName()
 {
-    return "SilencedTracerBlocker";
+    return "Better-FeedbackFix";
 }
 
-const char *SilencedTracerBlocker::GetDescription()
+const char *BetterFeedBackFix::GetDescription()
 {
-    return "Blocks BetterFeedback silenced weapon tracers while preserving shot sound and impacts.";
+    return "Blocks Better-Feedback silenced weapons tracers.";
 }
 
-const char *SilencedTracerBlocker::GetURL()
+const char *BetterFeedBackFix::GetURL()
 {
-    return "https://github.com/Staaar0/SilencedTracerBlocker";
+    return "https://github.com/Staaar0/Better-FeedbackFix";
 }
 
-const char *SilencedTracerBlocker::GetLicense()
+const char *BetterFeedBackFix::GetLicense()
 {
     return "MIT";
 }
 
-const char *SilencedTracerBlocker::GetVersion()
+const char *BetterFeedBackFix::GetVersion()
 {
     return PLUGIN_FULL_VERSION;
 }
 
-const char *SilencedTracerBlocker::GetDate()
+const char *BetterFeedBackFix::GetDate()
 {
     return __DATE__;
 }
 
-const char *SilencedTracerBlocker::GetLogTag()
+const char *BetterFeedBackFix::GetLogTag()
 {
-    return "STB";
+    return "BFBFIX";
 }
