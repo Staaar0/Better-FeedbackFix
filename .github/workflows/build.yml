@@ -17,16 +17,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install tools
+        shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3 python3-pip clang g++-multilib zip
-          python3 -m pip install --upgrade pip
-          python3 -m pip install ambuild
+          sudo apt-get install -y python3 python3-pip clang g++-multilib zip git
+          python3 -m pip install --upgrade pip setuptools wheel
+          mkdir -p deps
+          git clone --depth=1 https://github.com/alliedmodders/ambuild.git deps/ambuild
+          python3 -m pip install ./deps/ambuild
 
       - name: Fetch Metamod and HL2SDK CS2
         shell: bash
         run: |
-          mkdir -p deps
           git clone --depth=1 --recursive https://github.com/alliedmodders/metamod-source.git deps/metamod-source
           git clone --depth=1 --branch cs2 https://github.com/alliedmodders/hl2sdk.git deps/hl2sdk-cs2
 
@@ -64,13 +66,14 @@ jobs:
       - name: Install AMBuild
         shell: pwsh
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install ambuild
+          python -m pip install --upgrade pip setuptools wheel
+          New-Item -ItemType Directory -Force -Path deps
+          git clone --depth=1 https://github.com/alliedmodders/ambuild.git deps/ambuild
+          python -m pip install ./deps/ambuild
 
       - name: Fetch Metamod and HL2SDK CS2
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path deps
           git clone --depth=1 --recursive https://github.com/alliedmodders/metamod-source.git deps/metamod-source
           git clone --depth=1 --branch cs2 https://github.com/alliedmodders/hl2sdk.git deps/hl2sdk-cs2
 
@@ -109,6 +112,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: build-${{ github.run_number }}
+        shell: bash
         run: |
           gh release create "$TAG_NAME" \
             --title "BetterFeedbackFix $TAG_NAME" \
