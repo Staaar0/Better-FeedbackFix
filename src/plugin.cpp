@@ -350,8 +350,7 @@ bool BetterFeedbackFix::Unload(char *error, size_t maxlen)
 
 const char *BetterFeedbackFix::GetAuthor()
 {
-    // UTF-8 bytes for: ✪ Stαr
-    return "\xE2\x9C\xAA St\xCE\xB1r";
+    return "✪ Stαr";
 }
 
 const char *BetterFeedbackFix::GetName()
@@ -386,5 +385,5 @@ const char *BetterFeedbackFix::GetDate()
 
 const char *BetterFeedbackFix::GetLogTag()
 {
-    return "STB";
+    return "BFBFIX";
 }
