@@ -29,14 +29,9 @@ constexpr int kFireBulletsId = 452;
 #ifdef _WIN32
 constexpr size_t kPostEventIndex = 15;
 #else
-// Linux uses the Itanium C++ ABI, which places extra destructor slots in
-// vtables. The PostEventAbstract slot is therefore two entries after the
-// Windows/MSVC slot. Using the Windows slot on Linux can hook the wrong
-// method and crash the server at startup.
 constexpr size_t kPostEventIndex = 17;
 #endif
 
-// Current CMsgTEFireBullets generated-protobuf object layout used by CS2.
 constexpr size_t kWeaponIdOffset = 0x60;
 constexpr size_t kModeOffset = 0x64;
 constexpr size_t kSeedOffset = 0x68;
@@ -56,10 +51,6 @@ constexpr size_t kWeaponIdLiveOffset = 0x98;
 constexpr size_t kPlayerLiveOffset = 0x9C;
 constexpr uint32_t kDefaultEntityHandle = 0x00FFFFFFu;
 
-// CMsgTEFireBullets has one generated-protobuf has-bits word before the scalar
-// fields. Zeroing scalar values alone can still serialize the fields as
-// present, which still allows the client tracer path to run. These bits match
-// the field order shown by the CMsgTEFireBullets debug string.
 constexpr uint32_t kHasBitOrigin = 1u << 0;
 constexpr uint32_t kHasBitWeaponId = 1u << 2;
 constexpr uint32_t kHasBitSoundType = 1u << 9;
@@ -146,10 +137,6 @@ void HideTracerWeaponIdentity(unsigned char *data, size_t size)
     if (!data || size < kPlayerLiveOffset + sizeof(uint32_t))
         return;
 
-    // In the live CS2 CMsgTEFireBullets object, the last two uint32 fields are
-    // weapon_id and player. SS-21 cleared both and removed tracers, but clearing
-    // player also removed wall/surface impacts. Keep player intact for impacts
-    // and neutralize only weapon_id, which is the tracer weapon identity.
     WriteUInt32(data, size, kWeaponIdLiveOffset, kDefaultEntityHandle);
 }
 
@@ -210,8 +197,6 @@ void Hook_PostEventAbstract(void *self, int slot, bool localOnly, void *filter,
         auto *bytes = reinterpret_cast<unsigned char *>(const_cast<CNetMessage *>(messageData));
         const size_t size = static_cast<size_t>(messageSize);
 
-        // Keep sound, player, and impact data intact. Only neutralize the live
-        // weapon identity used by BetterFeedback/CS2 to choose a tracer.
         HideTracerWeaponIdentity(bytes, size);
 
         g_OriginalPostEventAbstract(self, slot, localOnly, filter, networkMessage, messageData, messageSize);
