@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Recent CounterStrikeSharp builds target .NET 10. This must match the
+         runtime your server's CounterStrikeSharp ships with. If your server runs
+         an older CounterStrikeSharp on .NET 8, change this to net8.0 AND pin the
+         package below to a version that supports net8.0. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <!-- Required so CounterStrikeSharp can load the plugin and copy dependencies. -->
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AssemblyName>BetterFeedbackFix</AssemblyName>
+    <RootNamespace>BetterFeedbackFix</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Pinned to a fixed version (no wildcard) so the build is reproducible.
+         Set this to the exact CounterStrikeSharp.API version that matches the
+         CounterStrikeSharp build installed on your server (check the version in
+         addons/counterstrikesharp/). 1.0.369 targets net10.0. -->
+    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.369">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
