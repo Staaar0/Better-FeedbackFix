@@ -1,0 +1,68 @@
+name: Build BetterFeedbackFix
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # Path to the project, relative to the repo root.
+  PROJECT: BetterFeedbackFix/BetterFeedbackFix.csproj
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore "$PROJECT"
+
+      - name: Build
+        run: dotnet build "$PROJECT" -c Release --no-restore -o build/out
+
+      - name: Package
+        shell: bash
+        run: |
+          # Lay out the CounterStrikeSharp plugin folder structure under package/.
+          PLUGIN_DIR="package/addons/counterstrikesharp/plugins/BetterFeedbackFix"
+          mkdir -p "$PLUGIN_DIR"
+          cp build/out/BetterFeedbackFix.dll "$PLUGIN_DIR/"
+          find build/out -maxdepth 1 -name '*.dll' ! -name 'CounterStrikeSharp.API.dll' \
+            -exec cp {} "$PLUGIN_DIR/" \;
+          # Build the single distribution zip (contains the addons/ tree at its root).
+          cd package
+          zip -r "$GITHUB_WORKSPACE/BetterFeedbackFix.zip" .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BetterFeedbackFix
+          # Upload the raw addons/ tree (NOT the pre-made zip). GitHub wraps an
+          # artifact in its own zip on download, so uploading raw files means the
+          # download is a single zip instead of a zip-inside-a-zip.
+          path: package/
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: build-${{ github.run_number }}
+        shell: bash
+        run: |
+          gh release delete "$TAG_NAME" -y --cleanup-tag || true
+          gh release create "$TAG_NAME" \
+            --target "${{ github.sha }}" \
+            --title "BetterFeedbackFix $TAG_NAME" \
+            --notes "Automated release for commit ${{ github.sha }}." \
+            "$GITHUB_WORKSPACE/BetterFeedbackFix.zip"
