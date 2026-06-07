@@ -1,6 +1,5 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.UserMessages;
-using Microsoft.Extensions.Logging;
 
 namespace BetterFeedbackFix;
 
@@ -29,7 +28,6 @@ public class BetterFeedbackFix : BasePlugin
     public override void Load(bool hotReload)
     {
         HookUserMessage(TE_FIRE_BULLETS, OnFireBullets, HookMode.Pre);
-        Logger.LogInformation("BetterFeedbackFix loaded. Hooking TE_FireBullets (msg id {Id}).", TE_FIRE_BULLETS);
     }
 
     public override void Unload(bool hotReload)
