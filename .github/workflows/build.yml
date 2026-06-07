@@ -22,11 +22,23 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Locate project
+        id: proj
+        shell: bash
+        run: |
+          CSPROJ="$(find . -name 'BetterFeedbackFix.csproj' | head -n1)"
+          if [ -z "$CSPROJ" ]; then
+            echo "::error::BetterFeedbackFix.csproj not found anywhere in the repo."
+            exit 1
+          fi
+          echo "Found project at: $CSPROJ"
+          echo "csproj=$CSPROJ" >> "$GITHUB_OUTPUT"
+
       - name: Restore
-        run: dotnet restore BetterFeedbackFix.csproj
+        run: dotnet restore "${{ steps.proj.outputs.csproj }}"
 
       - name: Build
-        run: dotnet build BetterFeedbackFix.csproj -c Release --no-restore -o build/out
+        run: dotnet build "${{ steps.proj.outputs.csproj }}" -c Release --no-restore -o build/out
 
       - name: Package
         shell: bash
