@@ -1,5 +1,4 @@
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.UserMessages;
@@ -57,6 +56,11 @@ public class BetterFeedbackFix : BasePlugin
     public override void Load(bool hotReload)
     {
         HookUserMessage(TE_FIRE_BULLETS, OnFireBullets, HookMode.Pre);
+
+        // Registered programmatically instead of via a [ConsoleCommand] attribute
+        // to avoid attribute-namespace differences between CounterStrikeSharp versions.
+        AddCommand("css_bffix_debug", "Toggle BetterFeedbackFix field logging (1/0)", OnDebugCommand);
+
         Logger.LogInformation("BetterFeedbackFix loaded. Hooking TE_FireBullets (msg id {Id}).", TE_FIRE_BULLETS);
     }
 
@@ -114,11 +118,22 @@ public class BetterFeedbackFix : BasePlugin
     // Toggle from server console: css_bffix_debug 1   (and 0 to turn off)
     // Fire one shot silenced and one unsilenced, then diff the logged values to
     // confirm which field carries the weapon handle on your game build.
-    [ConsoleCommand("css_bffix_debug", "Toggle BetterFeedbackFix field logging (1/0)")]
-    [RequiresPermissions("@css/root")]
-    [CommandHelper(minArgs: 1, usage: "<1|0>")]
-    public void OnDebugCommand(CCSPlayerController? player, CommandInfo info)
+    private void OnDebugCommand(CCSPlayerController? player, CommandInfo info)
     {
+        // player == null means it was run from the server console; allow that.
+        // In-game players must have root permission.
+        if (player != null && !AdminManager.PlayerHasPermissions(player, "@css/root"))
+        {
+            info.ReplyToCommand("[BetterFeedbackFix] You do not have permission to use this.");
+            return;
+        }
+
+        if (info.ArgCount < 2)
+        {
+            info.ReplyToCommand("[BetterFeedbackFix] usage: css_bffix_debug <1|0>");
+            return;
+        }
+
         _debug = info.GetArg(1) == "1";
         info.ReplyToCommand($"[BetterFeedbackFix] debug = {_debug}");
     }
