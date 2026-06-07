@@ -1,4 +1,4 @@
-#include "plugin.h" 
+#include "plugin.h"
 
 #include <networksystem/inetworkmessages.h>
 #include <networksystem/netmessage.h>
